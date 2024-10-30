@@ -25,9 +25,19 @@ app.get("/", (req, res) => {
     status: "success",
     message: "Welcome to API TekkomFess",
     author: "Muhammad Ahib Ibrilli",
-    routes: {
-      path: "/api/menfess",
-      description: "This endpoint to get or post menfess",
-    },
+    routes: [
+      {
+        path: "/api/menfess",
+        description: "This endpoint to get or post menfess",
+      },
+      {
+        path: "/api/menfess/:id",
+        description: "This endpoint to get detail menfess",
+      },
+      {
+        path: "/api/menfess/:id/comment",
+        description: "This endpoint to post comment menfess",
+      },
+    ],
   });
 });
