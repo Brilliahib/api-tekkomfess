@@ -2,6 +2,7 @@
 const { initializeApp } = require("firebase/app");
 const { getAuth } = require("firebase/auth");
 const { getFirestore } = require("firebase/firestore");
+const { getStorage } = require("firebase/storage"); // Tambahkan ini
 const dotenv = require("dotenv");
 
 require("dotenv").config({ path: ".env.local" });
@@ -23,5 +24,6 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase services
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app); // Inisialisasi storage
 
-module.exports = { app, auth, db };
+module.exports = { app, auth, db, storage }; // Ekspor storage
