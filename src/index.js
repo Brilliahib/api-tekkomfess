@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/authRoutes");
+const menfessRoutes = require("./routes/menfessRoutes");
 
 // Load variables from .env file
 require("dotenv").config({ path: ".env.local" });
@@ -10,6 +11,7 @@ const port = process.env.PORT || 3000;
 const app = express();
 app.use(bodyParser.json());
 app.use("/api/auth", authRoutes);
+app.use("/api", menfessRoutes);
 
 app.listen(port, () => {
   /* eslint-disable no-console */
@@ -23,6 +25,9 @@ app.get("/", (req, res) => {
     status: "success",
     message: "Welcome to API TekkomFess",
     author: "Muhammad Ahib Ibrilli",
-    description: "This is a backend API for TekkomFess Application.",
+    routes: {
+      path: "/api/menfess",
+      description: "This endpoint to get or post menfess",
+    },
   });
 });
