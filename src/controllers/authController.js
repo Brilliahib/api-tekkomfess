@@ -94,7 +94,7 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { uid: userData.uid, email: userData.email },
+      { uid: userData.uid, email: userData.email, fullname: userData.fullname },
       JWT_SECRET,
       { expiresIn: "1h" }
     );

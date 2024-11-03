@@ -41,6 +41,19 @@ const createMenfess = async (req, res) => {
     const createdAt = new Date();
     const user = req.user;
 
+    if (!user || !user.uid || !user.email || !user.fullname) {
+      return res.status(400).json({
+        statusCode: 400,
+        message: "User information is missing.",
+      });
+    }
+
+    const userInfo = {
+      uid: user.uid,
+      email: user.email,
+      fullname: user.fullname,
+    };
+
     const imageUrls = await Promise.all(
       Array.isArray(images) ? images.map(uploadImage) : []
     );
@@ -49,10 +62,11 @@ const createMenfess = async (req, res) => {
       id: menfessId,
       message: message,
       created_at: createdAt,
-      user,
+      user: userInfo,
       images: imageUrls,
       comments: [],
     });
+
     res.status(201).json({
       statusCode: 201,
       message: "Menfess created successfully",
@@ -60,7 +74,7 @@ const createMenfess = async (req, res) => {
         id: menfessId,
         message,
         created_at: createdAt,
-        user,
+        user: userInfo,
         images: imageUrls,
         comments: [],
       },
@@ -86,8 +100,12 @@ const getAllMenfess = async (req, res) => {
         message: data.message,
         images: data.images,
         comments: data.comments,
-        created_at: data.created_at,
-        user: data.user,
+        created_at: data.created_at.toDate(),
+        user: {
+          uid: data.user.uid,
+          email: data.user.email,
+          fullname: data.user.fullname,
+        },
       };
     });
 
@@ -133,8 +151,12 @@ const getMenfessById = async (req, res) => {
       message: data.message,
       images: data.images,
       comments: data.comments,
-      created_at: data.created_at,
-      user: data.user,
+      created_at: data.created_at.toDate(),
+      user: {
+        uid: data.user.uid,
+        email: data.user.email,
+        fullname: data.user.fullname,
+      },
     };
 
     res.status(200).json({
@@ -153,9 +175,24 @@ const getMenfessById = async (req, res) => {
 
 // Add comment to menfess
 const addCommentToMenfess = async (req, res) => {
+  console.log("Received req.body:", req.body); // Debugging line
+
   const { id } = req.params;
-  const { comment } = req.body;
+  const { comment } = req.body; // Destructure to get the comment from req.body
   const user = req.user;
+
+  if (!user || !user.uid || !user.email || !user.fullname) {
+    return res.status(400).json({
+      statusCode: 400,
+      message: "User information is missing.",
+    });
+  }
+
+  const userInfo = {
+    uid: user.uid,
+    email: user.email,
+    fullname: user.fullname,
+  };
 
   if (!id) {
     return res.status(400).json({
@@ -164,7 +201,8 @@ const addCommentToMenfess = async (req, res) => {
     });
   }
 
-  if (!comment) {
+  // Check if comment is undefined or an empty string
+  if (comment === undefined || comment.trim() === "") {
     return res.status(400).json({
       statusCode: 400,
       message: "Comment is required.",
@@ -182,18 +220,20 @@ const addCommentToMenfess = async (req, res) => {
       });
     }
 
-    const currentComments = menfessDoc.data().comments || []; // Menghindari kesalahan jika comments tidak ada
+    const currentComments = menfessDoc.data().comments || [];
     const updatedComments = [
       ...currentComments,
-      { user, comment, created_at: new Date() },
+      { userInfo, comment, created_at: new Date() },
     ];
 
     await updateDoc(menfessRef, { comments: updatedComments });
 
+    // Return the comment directly, removing the object structure
     res.status(200).json({
       statusCode: 200,
       message: "Comment added successfully",
-      data: { user, comment, created_at: new Date() },
+      data: comment,
+      created_at: new Date(),
     });
   } catch (error) {
     res.status(500).json({
