@@ -42,6 +42,14 @@ app.get("/", (req, res) => {
         path: "/api/menfess/:id/comment",
         description: "This endpoint to post comment menfess",
       },
+      {
+        path: "/api/users",
+        description: "This endpoint to get all users",
+      },
+      {
+        path: "/api/users/:id",
+        description: "This endpoint to get detail users",
+      },
     ],
   });
 });
