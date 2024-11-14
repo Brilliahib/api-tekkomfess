@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/authRoutes");
 const menfessRoutes = require("./routes/menfessRoutes");
+const userRoutes = require("./routes/userRoute");
 const cors = require("cors");
 
 // Load variables from .env file
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use("/api/auth", authRoutes);
 app.use("/api", menfessRoutes);
+app.use("/api", userRoutes);
 
 app.listen(port, () => {
   /* eslint-disable no-console */
