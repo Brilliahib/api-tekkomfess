@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.get("/users", userController.getAllUsers);
 router.get("/users/:uid", userController.getUserByUid);
+router.get("/users/:uid/menfess", userController.getMenfessByUserId);
 
 module.exports = router;
